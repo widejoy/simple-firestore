@@ -20,6 +20,7 @@ class home extends StatelessWidget {
     }
 
     return Scaffold(
+      appBar: AppBar(),
       body: Column(
         children: [
           const SizedBox(
