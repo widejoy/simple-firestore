@@ -1,14 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crud/models/basicmodel.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'home.dart';
 
 // ignore: camel_case_types
-class homepage extends StatelessWidget {
+class homepage extends StatefulWidget {
   const homepage({super.key});
 
   @override
+  State<homepage> createState() => _homepageState();
+}
+
+class _homepageState extends State<homepage> {
+  void setupPushNotification() async {
+    final fcm = FirebaseMessaging.instance;
+    await fcm.requestPermission();
+    fcm.subscribeToTopic('item');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setupPushNotification();
+  }
+
   Widget build(BuildContext context) {
     Stream<List<User>> readusers() {
       return FirebaseFirestore.instance.collection('data').snapshots().map(
