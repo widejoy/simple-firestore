@@ -18,6 +18,26 @@ class _homepageState extends State<homepage> {
     final fcm = FirebaseMessaging.instance;
     await fcm.requestPermission();
     fcm.subscribeToTopic('item');
+    fcm.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      String clickAction = message.data['clickAction'];
+
+      if (clickAction == 'PAGE1') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const home()),
+        );
+      } else if (clickAction == 'PAGE2') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const homepage()),
+        );
+      } else {}
+    });
   }
 
   @override

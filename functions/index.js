@@ -9,7 +9,7 @@ exports.myFunction = functions.firestore
       notification: {
         title: snapshot.data()["name"],
         body: snapshot.data()["age"],
-        clickAction: "FLUTTER_NOTIFICATION_CLICK",
+        clickAction: "page_1",
       },
     });
   });
@@ -19,7 +19,7 @@ exports.newfunction = functions.firestore
       notification: {
         title: 'An item has been removed',
         body: snapshot.data()["name"],
-        clickAction: "FLUTTER_NOTIFICATION_CLICK",
+        clickAction: "page_2",
       },
     });
   });
