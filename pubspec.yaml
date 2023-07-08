@@ -39,6 +39,7 @@ dependencies:
   convert: ^3.1.1
   firebase_dynamic_links: ^4.3.11
   firebase_messaging: ^13.1.0
+  url_launcher: ^6.1.12
 
 dev_dependencies:
   flutter_test:

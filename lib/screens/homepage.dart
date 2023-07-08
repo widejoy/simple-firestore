@@ -14,16 +14,47 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  void initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink;
-    final dynamiclinkparams = DynamicLinkParameters(
-      link: Uri.parse("https://www.apppage.com/"),
-      uriPrefix: "https://cruddomain.page.link",
-      androidParameters:
-          const AndroidParameters(packageName: "com.example.crud"),
+  FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
+  String? _linkMessage;
+  bool _isCreatingLink = false;
+  final String DynamicLink = 'https://test-app/helloworld';
+  final String Link = 'https://reactnativefirebase.page.link/bFkn';
+
+  Future<void> initDynamicLinks() async {
+    dynamicLinks.onLink.listen((dynamicLinkData) {
+      Navigator.pushNamed(context, dynamicLinkData.link.path);
+    }).onError((error) {});
+  }
+
+  Future<void> _createDynamicLink(bool short) async {
+    setState(() {
+      _isCreatingLink = true;
+    });
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://cruddomain.page.link',
+      longDynamicLink: Uri.parse(
+        'https://reactnativefirebase.page.link/?efr=0&ibi=io.invertase.testing&apn=io.flutter.plugins.firebase.dynamiclinksexample&imv=0&amv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=https://ofl-example.com',
+      ),
+      link: Uri.parse(DynamicLink),
+      androidParameters: const AndroidParameters(
+        packageName: 'com.example.crud',
+        minimumVersion: 0,
+      ),
     );
-    final dynamicLink =
-        await FirebaseDynamicLinks.instance.buildLink(dynamiclinkparams);
+
+    Uri url;
+    if (short) {
+      final ShortDynamicLink shortLink =
+          await dynamicLinks.buildShortLink(parameters);
+      url = shortLink.shortUrl;
+    } else {
+      url = await dynamicLinks.buildLink(parameters);
+    }
+
+    setState(() {
+      _linkMessage = url.toString();
+      _isCreatingLink = false;
+    });
   }
 
   void setupPushNotification() async {
@@ -35,31 +66,25 @@ class _HomepageState extends State<Homepage> {
       badge: true,
       sound: true,
     );
-    FirebaseMessaging.onMessageOpenedApp.listen(
-      (RemoteMessage message) {
-        String clickAction = message.data['clickAction'];
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      String clickAction = message.data['clickAction'];
 
-        if (clickAction == 'page_2') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const Home(),
-            ),
-          );
-        } else if (clickAction == 'page_1') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const Homepage(),
-            ),
-          );
-        } else {
+      if (clickAction == 'page_2') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Home(),
+          ),
+        );
+      } else if (clickAction == 'page_1') {
+        Navigator.push(
+          context,
           MaterialPageRoute(
             builder: (context) => const Homepage(),
-          );
-        }
-      },
-    );
+          ),
+        );
+      } else {}
+    });
   }
 
   @override
