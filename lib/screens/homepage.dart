@@ -1,19 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crud/models/basicmodel.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-
 import 'home.dart';
 
 // ignore: camel_case_types
-class homepage extends StatefulWidget {
-  const homepage({super.key});
+class Homepage extends StatefulWidget {
+  const Homepage({super.key});
 
   @override
-  State<homepage> createState() => _homepageState();
+  State<Homepage> createState() => _HomepageState();
 }
 
-class _homepageState extends State<homepage> {
+class _HomepageState extends State<Homepage> {
+  void initDynamicLinks() async {
+    FirebaseDynamicLinks.instance.onLink;
+    final dynamiclinkparams = DynamicLinkParameters(
+      link: Uri.parse("https://www.apppage.com/"),
+      uriPrefix: "https://cruddomain.page.link",
+      androidParameters:
+          const AndroidParameters(packageName: "com.example.crud"),
+    );
+    final dynamicLink =
+        await FirebaseDynamicLinks.instance.buildLink(dynamiclinkparams);
+  }
+
   void setupPushNotification() async {
     final fcm = FirebaseMessaging.instance;
     await fcm.requestPermission();
@@ -23,21 +35,31 @@ class _homepageState extends State<homepage> {
       badge: true,
       sound: true,
     );
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      String clickAction = message.data['clickAction'];
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      (RemoteMessage message) {
+        String clickAction = message.data['clickAction'];
 
-      if (clickAction == 'PAGE1') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const home()),
-        );
-      } else if (clickAction == 'PAGE2') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const homepage()),
-        );
-      } else {}
-    });
+        if (clickAction == 'page_2') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Home(),
+            ),
+          );
+        } else if (clickAction == 'page_1') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Homepage(),
+            ),
+          );
+        } else {
+          MaterialPageRoute(
+            builder: (context) => const Homepage(),
+          );
+        }
+      },
+    );
   }
 
   @override
@@ -46,6 +68,7 @@ class _homepageState extends State<homepage> {
     setupPushNotification();
   }
 
+  @override
   Widget build(BuildContext context) {
     Stream<List<User>> readusers() {
       return FirebaseFirestore.instance.collection('data').snapshots().map(
@@ -84,7 +107,7 @@ class _homepageState extends State<homepage> {
                       updateuser.delete();
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
-                          return const home();
+                          return const Home();
                         },
                       ));
                     },
@@ -111,7 +134,7 @@ class _homepageState extends State<homepage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const home(),
+                    builder: (context) => const Home(),
                   ));
             },
             icon: const Icon(Icons.add),

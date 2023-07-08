@@ -8,6 +8,8 @@ Future main() async {
   await Firebase.initializeApp();
 
   runApp(
-    const MaterialApp(home: homepage()),
+    const MaterialApp(
+      home: Homepage(),
+    ),
   );
 }

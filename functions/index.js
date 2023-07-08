@@ -2,28 +2,39 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 
 admin.initializeApp();
+
 exports.myFunction = functions.firestore
   .document("data/{messageId}")
   .onCreate((snapshot, context) => {
+    const { name, age } = snapshot.data();
+
     return admin.messaging().sendToTopic("item", {
       notification: {
-        title: snapshot.data()["name"],
-        body: snapshot.data()["age"],
-        clickAction: "page_1",
+        title: name,
+        body: age,
+        android: {
+          notification: {
+            clickAction: "page_1",
+          },
+        },
       },
     });
   });
-exports.newfunction = functions.firestore
-  .document("data/{messageId}").onDelete((snapshot, context) => {
+
+exports.newFunction = functions.firestore
+  .document("data/{messageId}")
+  .onDelete((snapshot, context) => {
+    const { name } = snapshot.data();
+
     return admin.messaging().sendToTopic("item", {
       notification: {
         title: 'An item has been removed',
-        body: snapshot.data()["name"],
-        clickAction: "page_2",
+        body: name,
+        android: {
+          notification: {
+            clickAction: "page_2",
+          },
+        },
       },
     });
   });
-
-
-
-

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import '../models/basicmodel.dart';
 
 // ignore: camel_case_types
-class home extends StatelessWidget {
-  const home({super.key});
+class Home extends StatelessWidget {
+  const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
