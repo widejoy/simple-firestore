@@ -10,7 +10,11 @@ exports.myFunction = functions.firestore
       notification: {
         title: snapshot.data()["name"],
         body: snapshot.data()["age"],
-        clickAction: "page_1",
+        clickAction: "FLUTTER_NOTIFICATION_CLICK",
+        
+      },
+      data: {
+        notificationId: "page_1", // Include the unique identifier in the data payload
       },
     });
   });
@@ -22,7 +26,11 @@ exports.myFunction = functions.firestore
       notification: {
         title: "an item has been deleted",
         body: snapshot.data()["name"],
-        clickAction: "page_2",
+        clickAction: "FLUTTER_NOTIFICATION_CLICK",
       },
+      data: {
+        notificationId: "page_2", // Include the unique identifier in the data payload
+      }
     });
+
   });

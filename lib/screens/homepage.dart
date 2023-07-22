@@ -31,6 +31,41 @@ class _HomepageState extends State<Homepage> {
     );
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
 
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      String notificationId = message.data['notificationId'];
+
+      if (notificationId == 'page_2') {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('item has been deleted'),
+            content: Text(message.notification?.body ?? ''),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _navigatorKey.currentState?.push(
+                    MaterialPageRoute(
+                      builder: (context) => const Home(),
+                    ),
+                  );
+                },
+                child: const Text('add an item'),
+              ),
+            ],
+          ),
+        );
+      } else if (notificationId == 'page_1') {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(message.notification?.title ?? ''),
+            content: const Text('item has been added'),
+          ),
+        );
+      }
+    });
+
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       String notificationId = message.data['notificationId'];
 
