@@ -26,7 +26,6 @@ class Home extends StatelessWidget {
           const ClipboardData(text: "https://roger.bhagyaj.co.in/id"));
       const SnackBar(
         content: Text('Link copied'),
-        duration: Duration(seconds: 2),
       );
     }
 
