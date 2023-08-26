@@ -41,6 +41,8 @@ dependencies:
   firebase_dynamic_links:
   firebase_messaging:
   url_launcher: ^6.1.12
+  flutter_hooks:
+  share: ^2.0.4
 
 dev_dependencies:
   flutter_test:

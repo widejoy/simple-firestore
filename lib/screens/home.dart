@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:share/share.dart';
 
 import '../models/basicmodel.dart';
 
-// ignore: camel_case_types
 class Home extends StatelessWidget {
   const Home({super.key});
 
@@ -24,9 +24,15 @@ class Home extends StatelessWidget {
     void copyLink() async {
       await Clipboard.setData(
           const ClipboardData(text: "https://roger.bhagyaj.co.in/id"));
-      const SnackBar(
-        content: Text('Link copied'),
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Link copied'),
+        ),
       );
+    }
+
+    void shareLink() {
+      Share.share("Check out this link: https://roger.bhagyaj.co.in/id");
     }
 
     return Scaffold(
@@ -71,6 +77,10 @@ class Home extends StatelessWidget {
           ElevatedButton(
             onPressed: copyLink,
             child: const Text('Copy Link'),
+          ),
+          ElevatedButton(
+            onPressed: shareLink,
+            child: const Text('Share Link'),
           ),
         ],
       ),
